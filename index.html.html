@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/609/609803.png">
+    
+    <title>Rental Manager - Smart Property Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        :root { 
+            --primary: #10b981; 
+            --accent: #6366f1; 
+            --bg: #0f172a; 
+            --card-bg: rgba(30, 41, 59, 0.7); 
+            --text-white: #f8fafc; 
+            --text-dim: #94a3b8; 
+            --danger: #ef4444; 
+        }
+        
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            padding: 15px; 
+            color: var(--text-white); 
+            overflow-x: hidden; 
+        }
+
+        .container { width: 100%; max-width: 450px; margin: auto; }
+        
+        .header { text-align: center; margin-bottom: 25px; padding-top: 10px; }
+        .header h1 { 
+            font-size: 26px; 
+            font-weight: 800; 
+            background: linear-gradient(to right, #10b981, #6366f1); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            margin: 0; 
+        }
+        .header p { color: var(--primary); font-size: 10px; letter-spacing: 2px; font-weight: 800; margin-top: 5px; }
+
+        .tabs { display: flex; background: rgba(51, 65, 85, 0.5); padding: 4px; border-radius: 12px; margin-bottom: 20px; position: sticky; top: 10px; z-index: 100; }
+        .tab-btn { flex: 1; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 11px; background: transparent; color: var(--text-dim); text-transform: uppercase; }
+        .tab-btn.active { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; }
+        
+        .card { background: var(--card-bg); padding: 20px; border-radius: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); display: none; margin-bottom: 20px; }
+        .card.active { display: block; animation: fadeIn 0.3s ease; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .input-group { margin-bottom: 15px; }
+        label { font-size: 9px; font-weight: 700; color: var(--text-dim); margin-bottom: 6px; display: block; text-transform: uppercase; }
+        input, select { width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: white; outline: none; font-size: 14px; }
+        
+        .btn-main { width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; color: white; text-transform: uppercase; margin-top: 5px; background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+
+        .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-box { padding: 12px; border-radius: 15px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-box label { font-size: 8px; margin-bottom: 4px; color: var(--text-dim); }
+        .stat-box h3 { margin: 0; font-size: 13px; font-weight: 800; }
+
+        .month-card { margin-bottom: 20px; background: rgba(255,255,255,0.03); border-radius: 18px; border: 1px solid rgba(255,255,255,0.08); overflow: hidden; }
+        .month-header { background: var(--accent); padding: 15px; }
+        .progress-container { width: 100%; height: 8px; background: rgba(0,0,0,0.2); border-radius: 10px; margin-top: 10px; }
+        .progress-bar { height: 100%; background: #fff; border-radius: 10px; transition: width 0.8s ease; }
+
+        .manage-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(255, 255, 255, 0.05); border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .btn-del { background-color: var(--danger) !important; color: white !important; border: none; padding: 8px 16px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
+
+        /* Invoice styling */
+        #invoice { display: none; background: #ffffff; color: #1e293b; padding: 30px; border-top: 8px solid #10b981; position: relative; border-radius: 15px; margin-top: 20px;}
+        .inv-header { text-align: center; border-bottom: 2px dashed #e2e8f0; padding-bottom: 15px; margin-bottom: 20px; }
+        .inv-header h2 { margin: 0; color: #10b981; font-weight: 800; }
+        .inv-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; }
+        .inv-label { color: #64748b; font-weight: 600; }
+        .inv-amount-box { background: #f0fdf4; padding: 15px; border-radius: 12px; text-align: center; margin: 20px 0; border: 1px solid #bbf7d0; }
+        .inv-amount-box h1 { margin: 0; color: #10b981; font-size: 32px; font-weight: 800; }
+        .stamp { position: absolute; bottom: 80px; right: 30px; border: 3px solid #10b981; color: #10b981; padding: 5px 15px; border-radius: 8px; font-weight: 900; transform: rotate(-15deg); opacity: 0.15; font-size: 20px; pointer-events: none; }
+
+        @media print { .no-print { display: none !important; } #invoice { display: block !important; width: 100%; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header no-print">
+        <h1>Rental Manager</h1>
+        <p>SMART PROPERTY APP</p>
+    </div>
+
+    <div class="tabs no-print">
+        <button class="tab-btn active" onclick="switchTab(event, 'rent-portal')">Rent</button>
+        <button class="tab-btn" onclick="switchTab(event, 'reg-portal'); displayManageList();">Tenants</button>
+        <button class="tab-btn" onclick="switchTab(event, 'summary-portal'); loadSummary();">Summary</button>
+    </div>
+
+    <div id="rent-portal" class="card active no-print">
+        <div class="input-group">
+            <label>Select Tenant</label>
+            <select id="tenantSelect" onchange="autoFillData()"><option>Loading...</option></select>
+        </div>
+        <div style="display:flex; gap:10px;">
+            <div class="input-group" style="flex:1;"><label>Base Rent</label><input type="number" id="fixedRent" readonly></div>
+            <div class="input-group" style="flex:1;"><label>Utility</label><input type="number" id="utilAmt" value="0" oninput="calculateTotal()"></div>
+        </div>
+        <div style="display:flex; gap:10px;">
+            <div class="input-group" style="flex:1;"><label>Total Bill</label><input type="number" id="totalBillAmt" readonly></div>
+            <div class="input-group" style="flex:1;"><label>Paid Amount</label><input type="number" id="paidAmt"></div>
+        </div>
+        <div style="display:flex; gap:10px;">
+            <div class="input-group" style="flex:1;"><label>Month</label>
+                <select id="rentMonth">
+                    <option value="January, 2026">Jan</option><option value="February, 2026">Feb</option>
+                    <option value="March, 2026">Mar</option><option value="April, 2026">Apr</option>
+                    <option value="May, 2026">May</option><option value="June, 2026">Jun</option>
+                    <option value="July, 2026">Jul</option><option value="August, 2026">Aug</option>
+                    <option value="September, 2026">Sep</option><option value="October, 2026">Oct</option>
+                    <option value="November, 2026">Nov</option><option value="December, 2026">Dec</option>
+                </select>
+            </div>
+            <div class="input-group" style="flex:1;"><label>Payment Date</label><input type="date" id="pDate"></div>
+        </div>
+        <button class="btn-main" id="saveBtn" onclick="submitPayment()">Save & Generate Invoice</button>
+        
+        <div id="actionRow" style="display:none; gap:10px; margin-top:15px;">
+            <button onclick="sendWA()" style="flex:1; background:#22c55e; border:none; padding:12px; border-radius:10px; color:white; font-weight:bold; cursor:pointer;">WhatsApp Reciept</button>
+            <button onclick="window.print()" style="flex:1; background:#334155; border:none; padding:12px; border-radius:10px; color:white; font-weight:bold; cursor:pointer;">Print PDF</button>
+        </div>
+    </div>
+
+    <div id="reg-portal" class="card no-print">
+        <label style="color:var(--accent); font-size:11px; margin-bottom:10px; display:block;">Add New Resident</label>
+        <div class="input-group"><input type="text" id="regName" placeholder="Full Name"></div>
+        <div class="input-group"><input type="text" id="regMobile" placeholder="WhatsApp Number"></div>
+        <div style="display:flex; gap:10px;">
+            <input type="text" id="regUnit" placeholder="Unit/Flat" style="flex:1;">
+            <input type="number" id="regRent" placeholder="Monthly Rent" style="flex:1;">
+        </div>
+        <div class="input-group" style="margin-top:15px;"><input type="number" id="regUtil" placeholder="Fixed Utility (Optional)" value="0"></div>
+        <button class="btn-main" style="background:var(--accent);" id="regBtn" onclick="addNewTenant()">Register Resident</button>
+        <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:25px 0;">
+        <div id="manageList"></div>
+    </div>
+
+    <div id="summary-portal" class="card no-print">
+        <div class="stat-grid">
+            <div class="stat-box" style="background:rgba(16, 185, 129, 0.1);"><label>Collected</label><h3 id="sumPaid" style="color:#10b981;">৳ 0</h3></div>
+            <div class="stat-box" style="background:rgba(239, 68, 68, 0.1);"><label>Due</label><h3 id="sumDue" style="color:#ef4444;">৳ 0</h3></div>
+            <div class="stat-box" style="background:rgba(99, 102, 241, 0.1);"><label>Expected</label><h3 id="sumExpected" style="color:#6366f1;">৳ 0</h3></div>
+        </div>
+        <div id="summaryList"></div>
+    </div>
+
+    <div id="invoice">
+        <div class="stamp">PAID</div>
+        <div class="inv-header"><h2>RENTAL RECEIPT</h2><p>Official Payment Voucher</p></div>
+        <div class="inv-row"><span class="inv-label">Resident</span><span id="iName" style="font-weight:800;"></span></div>
+        <div class="inv-row"><span class="inv-label">Unit</span><span id="iUnit" style="font-weight:800;"></span></div>
+        <div class="inv-row"><span class="inv-label">Month</span><span id="iMonth" style="font-weight:800;"></span></div>
+        <hr style="border:0; border-top:1px dashed #e2e8f0; margin:15px 0;">
+        <div class="inv-row"><span class="inv-label">Base Rent</span><span style="font-weight:800;">৳<span id="iRent">0</span></span></div>
+        <div class="inv-row"><span class="inv-label">Utilities</span><span style="font-weight:800;">৳<span id="iUtil">0</span></span></div>
+        <div class="inv-amount-box"><p>TOTAL RECEIVED</p><h1 id="iPaid">৳ 0</h1></div>
+        <div class="inv-row"><span class="inv-label">Remaining Balance</span><span id="iDue" style="color:#ef4444; font-weight:800;">৳ 0</span></div>
+        <div style="text-align:center; margin-top:30px; font-size:10px; color:#64748b;">Generated on: <span id="iDate"></span></div>
+    </div>
+</div>
+
+<input type="hidden" id="mobileNo"><input type="hidden" id="unitHidden">
+
+<script>
+    /* IMPORTANT: Setup instructions
+       1. Deploy your Google Apps Script as a Web App.
+       2. Replace the URL below with your Web App URL.
+    */
+    const scriptURL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE"; 
+    
+    let tenantData = [], activePayment = {};
+
+    // Tab Switching Logic
+    function switchTab(e, id) {
+        document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        if(e) e.currentTarget.classList.add('active');
+        document.getElementById('invoice').style.display = 'none';
+        document.getElementById('actionRow').style.display = 'none';
+    }
+
+    window.onload = () => {
+        document.getElementById('pDate').valueAsDate = new Date();
+        const months = ["January, 2026", "February, 2026", "March, 2026", "April, 2026", "May, 2026", "June, 2026", "July, 2026", "August, 2026", "September, 2026", "October, 2026", "November, 2026", "December, 2026"];
+        document.getElementById('rentMonth').value = months[new Date().getMonth()];
+        fetchTenants();
+    };
+
+    // Load Tenant List from Google Sheets
+    async function fetchTenants() {
+        try {
+            const res = await fetch(scriptURL + "?action=getTenants");
+            const data = await res.json();
+            tenantData = data.tenants || [];
+            const menu = document.getElementById('tenantSelect');
+            menu.innerHTML = '<option value="">-- Choose Tenant --</option>';
+            tenantData.forEach(t => menu.innerHTML += `<option value="${t.name}">${t.name}</option>`);
+        } catch (e) {
+            console.log("Error fetching data. Check your scriptURL.");
+        }
+    }
+
+    // Auto-fill form when tenant is selected
+    function autoFillData() {
+        const t = tenantData.find(x => x.name === document.getElementById('tenantSelect').value);
+        if(t) {
+            document.getElementById('fixedRent').value = t.fixedRent;
+            document.getElementById('utilAmt').value = t.fixedUtil;
+            document.getElementById('mobileNo').value = t.mobile;
+            document.getElementById('unitHidden').value = t.unit;
+            calculateTotal();
+        }
+    }
+
+    function calculateTotal() {
+        const r = parseFloat(document.getElementById('fixedRent').value) || 0;
+        const u = parseFloat(document.getElementById('utilAmt').value) || 0;
+        document.getElementById('totalBillAmt').value = r + u;
+        document.getElementById('paidAmt').value = r + u;
+    }
+
+    // Submit Payment Data
+    async function submitPayment() {
+        const btn = document.getElementById('saveBtn'); 
+        btn.disabled = true; btn.innerText = "Syncing with Cloud...";
+        
+        const rentPart = document.getElementById('fixedRent').value;
+        const utilPart = document.getElementById('utilAmt').value;
+
+        activePayment = {
+            type: 'RENT', 
+            name: document.getElementById('tenantSelect').value,
+            unit: document.getElementById('unitHidden').value,
+            totalBill: document.getElementById('totalBillAmt').value,
+            paid: document.getElementById('paidAmt').value,
+            due: Number(document.getElementById('totalBillAmt').value) - Number(document.getElementById('paidAmt').value),
+            date: document.getElementById('pDate').value,
+            month: document.getElementById('rentMonth').value,
+            mobile: document.getElementById('mobileNo').value
+        };
+
+        await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(activePayment) });
+        
+        // Show Invoice
+        document.getElementById('iName').innerText = activePayment.name;
+        document.getElementById('iUnit').innerText = activePayment.unit;
+        document.getElementById('iMonth').innerText = activePayment.month;
+        document.getElementById('iRent').innerText = rentPart;
+        document.getElementById('iUtil').innerText = utilPart;
+        document.getElementById('iPaid').innerText = "৳" + activePayment.paid;
+        document.getElementById('iDue').innerText = "৳" + activePayment.due;
+        document.getElementById('iDate').innerText = activePayment.date;
+        
+        document.getElementById('invoice').style.display = 'block';
+        document.getElementById('actionRow').style.display = 'flex';
+        btn.disabled = false; btn.innerText = "Save & Generate Invoice";
+    }
+
+    // WhatsApp Function with BD Country Code Fix
+    function sendWA() {
+        if(!activePayment.mobile) return alert("No mobile number found!");
+        
+        // Sanitize number: Remove everything except digits, then remove leading 0
+        const cleanMobile = activePayment.mobile.replace(/\D/g, '').replace(/^0+/, '');
+        const phone = '880' + cleanMobile; // Using 880 for Bangladesh
+        
+        const msg = `*RENT RECEIPT*%0A------------------%0A*Resident:* ${activePayment.name}%0A*Month:* ${activePayment.month}%0A*Rent:* ৳${document.getElementById('iRent').innerText}%0A*Utility:* ৳${document.getElementById('iUtil').innerText}%0A*Total Paid:* ৳${activePayment.paid}%0A*Due:* ৳${activePayment.due}%0A------------------%0A_Thank you for your payment!_`;
+
+        window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+    }
+
+    // Load Summary and Financial Reports
+    async function loadSummary() {
+        const listDiv = document.getElementById('summaryList');
+        listDiv.innerHTML = '<p style="text-align:center; padding:20px;">Refreshing stats...</p>';
+        
+        try {
+            const res = await fetch(scriptURL + "?action=getSummary");
+            const data = await res.json();
+            const logs = data.logs || [];
+            
+            let monthlyTarget = 0;
+            tenantData.forEach(t => monthlyTarget += (parseFloat(t.fixedRent) || 0) + (parseFloat(t.fixedUtil) || 0));
+
+            const monthlyData = {};
+            logs.forEach(log => {
+                const m = log.month || "Unknown";
+                if (!monthlyData[m]) monthlyData[m] = { paid: 0, entries: [] };
+                monthlyData[m].paid += parseFloat(log.paid) || 0;
+                monthlyData[m].entries.push(log);
+            });
+
+            let html = '', totalPaid = 0;
+            Object.keys(monthlyData).sort((a,b)=>new Date(b)-new Date(a)).forEach(month => {
+                const mPaid = monthlyData[month].paid;
+                totalPaid += mPaid;
+                const progress = Math.min((mPaid / monthlyTarget) * 100, 100).toFixed(0);
+                html += `
+                    <div class="month-card">
+                        <div class="month-header">
+                            <div style="display:flex; justify-content:space-between; font-size:13px;"><b>${month}</b><span>${progress}%</span></div>
+                            <div class="progress-container"><div class="progress-bar" style="width:${progress}%"></div></div>
+                        </div>
+                        <table style="width:100%; border-collapse:collapse; background:rgba(255,255,255,0.02);">
+                            ${monthlyData[month].entries.map(e => {
+                                let cleanDate = e.date ? e.date.split('T')[0] : "";
+                                return `<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                    <td style="padding:12px; font-size:12px;"><b>${e.name}</b><br><small style="color:var(--text-dim);">${cleanDate}</small></td>
+                                    <td style="text-align:right; color:var(--primary); font-weight:800; padding:12px;">৳${e.paid}</td>
+                                </tr>`;
+                            }).join('')}
+                        </table>
+                    </div>`;
+            });
+            document.getElementById('sumExpected').innerText = "৳ " + monthlyTarget;
+            document.getElementById('sumPaid').innerText = "৳ " + totalPaid;
+            document.getElementById('sumDue').innerText = "৳ " + (monthlyTarget - totalPaid > 0 ? monthlyTarget - totalPaid : 0);
+            listDiv.innerHTML = html || '<p style="text-align:center; padding:20px;">No transaction history found.</p>';
+        } catch (e) {
+            listDiv.innerHTML = '<p style="text-align:center; color:red;">Failed to load summary.</p>';
+        }
+    }
+
+    // Manage Resident List
+    function displayManageList() {
+        const list = document.getElementById('manageList');
+        list.innerHTML = tenantData.map(t => `
+            <div class="manage-item">
+                <div><b>${t.name}</b><br><small style="color:var(--text-dim);">Unit: ${t.unit}</small></div>
+                <button class="btn-del" onclick="deleteTenant('${t.name}')">Remove</button>
+            </div>`).join('');
+    }
+
+    async function deleteTenant(name) {
+        if(!confirm("Are you sure you want to delete resident: "+name+"?")) return;
+        await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({type: 'DELETE_TENANT', name: name}) });
+        fetchTenants(); displayManageList();
+    }
+
+    async function addNewTenant() {
+        const btn = document.getElementById('regBtn'); btn.disabled = true;
+        const payload = { 
+            type:'TENANT', 
+            name: document.getElementById('regName').value, 
+            mobile: document.getElementById('regMobile').value, 
+            flat: document.getElementById('regUnit').value, 
+            advance: document.getElementById('regRent').value, 
+            fixedUtil: document.getElementById('regUtil').value, 
+            date: new Date().toISOString().split('T')[0] 
+        };
+        await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+        alert("Resident Added Successfully!"); 
+        fetchTenants(); 
+        btn.disabled = false;
+        // Clear inputs
+        document.getElementById('regName').value = '';
+        document.getElementById('regMobile').value = '';
+    }
+</script>
+</body>
+</html>
