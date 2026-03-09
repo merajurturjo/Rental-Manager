@@ -13,80 +13,7 @@
     <title>Rental Manager - Smart Property Management</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     
-    <style>
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        :root { 
-            --primary: #10b981; 
-            --accent: #6366f1; 
-            --bg: #0f172a; 
-            --card-bg: rgba(30, 41, 59, 0.7); 
-            --text-white: #f8fafc; 
-            --text-dim: #94a3b8; 
-            --danger: #ef4444; 
-        }
-        
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: var(--bg); 
-            margin: 0; 
-            padding: 15px; 
-            color: var(--text-white); 
-            overflow-x: hidden; 
-        }
-
-        .container { width: 100%; max-width: 450px; margin: auto; }
-        
-        .header { text-align: center; margin-bottom: 25px; padding-top: 10px; }
-        .header h1 { 
-            font-size: 26px; 
-            font-weight: 800; 
-            background: linear-gradient(to right, #10b981, #6366f1); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            margin: 0; 
-        }
-        .header p { color: var(--primary); font-size: 10px; letter-spacing: 2px; font-weight: 800; margin-top: 5px; }
-
-        .tabs { display: flex; background: rgba(51, 65, 85, 0.5); padding: 4px; border-radius: 12px; margin-bottom: 20px; position: sticky; top: 10px; z-index: 100; }
-        .tab-btn { flex: 1; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 11px; background: transparent; color: var(--text-dim); text-transform: uppercase; }
-        .tab-btn.active { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; }
-        
-        .card { background: var(--card-bg); padding: 20px; border-radius: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); display: none; margin-bottom: 20px; }
-        .card.active { display: block; animation: fadeIn 0.3s ease; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .input-group { margin-bottom: 15px; }
-        label { font-size: 9px; font-weight: 700; color: var(--text-dim); margin-bottom: 6px; display: block; text-transform: uppercase; }
-        input, select { width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: white; outline: none; font-size: 14px; }
-        
-        .btn-main { width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; color: white; text-transform: uppercase; margin-top: 5px; background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
-
-        .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .stat-box { padding: 12px; border-radius: 15px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
-        .stat-box label { font-size: 8px; margin-bottom: 4px; color: var(--text-dim); }
-        .stat-box h3 { margin: 0; font-size: 13px; font-weight: 800; }
-
-        .month-card { margin-bottom: 20px; background: rgba(255,255,255,0.03); border-radius: 18px; border: 1px solid rgba(255,255,255,0.08); overflow: hidden; }
-        .month-header { background: var(--accent); padding: 15px; }
-        .progress-container { width: 100%; height: 8px; background: rgba(0,0,0,0.2); border-radius: 10px; margin-top: 10px; }
-        .progress-bar { height: 100%; background: #fff; border-radius: 10px; transition: width 0.8s ease; }
-
-        .manage-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(255, 255, 255, 0.05); border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255, 255, 255, 0.1); }
-        .btn-del { background-color: var(--danger) !important; color: white !important; border: none; padding: 8px 16px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
-
-        /* Invoice styling */
-        #invoice { display: none; background: #ffffff; color: #1e293b; padding: 30px; border-top: 8px solid #10b981; position: relative; border-radius: 15px; margin-top: 20px;}
-        .inv-header { text-align: center; border-bottom: 2px dashed #e2e8f0; padding-bottom: 15px; margin-bottom: 20px; }
-        .inv-header h2 { margin: 0; color: #10b981; font-weight: 800; }
-        .inv-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; }
-        .inv-label { color: #64748b; font-weight: 600; }
-        .inv-amount-box { background: #f0fdf4; padding: 15px; border-radius: 12px; text-align: center; margin: 20px 0; border: 1px solid #bbf7d0; }
-        .inv-amount-box h1 { margin: 0; color: #10b981; font-size: 32px; font-weight: 800; }
-        .stamp { position: absolute; bottom: 80px; right: 30px; border: 3px solid #10b981; color: #10b981; padding: 5px 15px; border-radius: 8px; font-weight: 900; transform: rotate(-15deg); opacity: 0.15; font-size: 20px; pointer-events: none; }
-
-        @media print { .no-print { display: none !important; } #invoice { display: block !important; width: 100%; } }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -374,4 +301,5 @@
     }
 </script>
 </body>
+
 </html>
